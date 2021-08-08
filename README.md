@@ -1,1 +1,1 @@
-# horscopes
+# horoscopes-checker
