@@ -4,10 +4,7 @@
   box-sizing: border-box;
 }
 
-html {
-  background-color: aliceblue;
-}
-
 body {
   height: 100vh;
+  background-color: aliceblue;
 }
