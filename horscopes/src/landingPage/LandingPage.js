@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./LandingPage.css";
 import SelectComponent from "./selectComponent/SelectComponent";
+import axios from "axios";
 
 function LandingPage() {
   console.log("parent render");
@@ -24,206 +25,28 @@ function LandingPage() {
     12: "Pisces",
   };
 
-  const mockDataForHoroscopeMatches = [
-    {
-      name: "Aries",
-      value: 1,
-      compatibilityMapping: [
-        {
-          name: "Aries",
-          value: 1,
-          compatible: false,
-        },
-        {
-          name: "Taurus",
-          value: 2,
-          compatible: false,
-        },
-        {
-          name: "Gemini",
-          value: 3,
-          compatible: true,
-        },
-        {
-          name: "Cancer",
-          value: 4,
-          compatible: false,
-        },
-        {
-          name: "Leo",
-          value: 5,
-          compatible: true,
-        },
-        {
-          name: "Virgo",
-          value: 6,
-          compatible: false,
-        },
-        {
-          name: "Libra",
-          value: 7,
-          compatible: false,
-        },
-        {
-          name: "Scorpio",
-          value: 8,
-          compatible: false,
-        },
-        {
-          name: "Sagittarius",
-          value: 9,
-          compatible: true,
-        },
-        {
-          name: "Capricorn",
-          value: 10,
-          compatible: false,
-        },
-        {
-          name: "Aquarius",
-          value: 11,
-          compatible: true,
-        },
-        {
-          name: "Pisces",
-          value: 12,
-          compatible: false,
-        },
-      ],
-    },
-    {
-      name: "Taurus",
-      value: 2,
-      compatibilityMapping: [
-        {
-          name: "Aries",
-          value: 1,
-          compatible: false,
-        },
-        {
-          name: "Taurus",
-          value: 2,
-          compatible: false,
-        },
-        {
-          name: "Gemini",
-          value: 3,
-          compatible: false,
-        },
-        {
-          name: "Cancer",
-          value: 4,
-          compatible: true,
-        },
-        {
-          name: "Leo",
-          value: 5,
-          compatible: false,
-        },
-        {
-          name: "Virgo",
-          value: 6,
-          compatible: true,
-        },
-        {
-          name: "Libra",
-          value: 7,
-          compatible: false,
-        },
-        {
-          name: "Scorpio",
-          value: 8,
-          compatible: false,
-        },
-        {
-          name: "Sagittarius",
-          value: 9,
-          compatible: false,
-        },
-        {
-          name: "Capricorn",
-          value: 10,
-          compatible: true,
-        },
-        {
-          name: "Aquarius",
-          value: 11,
-          compatible: false,
-        },
-        {
-          name: "Pisces",
-          value: 12,
-          compatible: true,
-        },
-      ],
-    },
-    {
-      name: "Gemini",
-      value: 2,
-      compatibilityMapping: [
-        {
-          name: "Aries",
-          value: 1,
-          compatible: true,
-        },
-        {
-          name: "Taurus",
-          value: 2,
-          compatible: false,
-        },
-        {
-          name: "Gemini",
-          value: 3,
-          compatible: false,
-        },
-        {
-          name: "Cancer",
-          value: 4,
-          compatible: false,
-        },
-        {
-          name: "Leo",
-          value: 5,
-          compatible: true,
-        },
-        {
-          name: "Virgo",
-          value: 6,
-          compatible: false,
-        },
-        {
-          name: "Libra",
-          value: 7,
-          compatible: true,
-        },
-        {
-          name: "Scorpio",
-          value: 8,
-          compatible: false,
-        },
-        {
-          name: "Sagittarius",
-          value: 9,
-          compatible: false,
-        },
-        {
-          name: "Capricorn",
-          value: 10,
-          compatible: false,
-        },
-        {
-          name: "Aquarius",
-          value: 11,
-          compatible: true,
-        },
-        {
-          name: "Pisces",
-          value: 12,
-          compatible: false,
-        },
-      ],
-    },
-  ];
+  const getHoroscopeUrl = "http://localhost:5000/horoscope/all";
+
+  const [mockDataForHoroscopeMatches, setMockDataForHoroscopeMatches] =
+    useState([]);
+
+  useEffect(() => {
+    axios.get(getHoroscopeUrl).then((response) => {
+      console.log(response);
+      setMockDataForHoroscopeMatches(response.data);
+    });
+  }, []);
+
+  useEffect(() => {
+    // if the user has selected a value for both dropdowns
+    // proceed to return comp value
+    if (
+      Object.keys(yourSign).length !== 0 &&
+      Object.keys(partnerSign).length !== 0
+    ) {
+      calculateComp();
+    }
+  }, [yourSign, partnerSign]);
 
   const calculateComp = () => {
     console.log(`your signs are: ${yourSign.rising}`);
@@ -271,16 +94,8 @@ function LandingPage() {
         </div>
       )}
 
-      {yourSign.rising && partnerSign.rising && (
-        <div>
-          <button onClick={calculateComp}>Check Compatibility</button>
-        </div>
-      )}
-
-      {isCompatible && <h1>You two are compatible</h1>}
-      {!isCompatible && isCompatible != null && (
-        <h1>You two are NOT compatible</h1>
-      )}
+      {isCompatible && <h1>Compatible</h1>}
+      {!isCompatible && isCompatible != null && <h1>NOT compatible</h1>}
     </div>
   );
 }
